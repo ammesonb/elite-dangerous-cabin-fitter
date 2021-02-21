@@ -1,0 +1,9 @@
+---
+# Mock YAML file for cabin quality
+6:
+  b: 1
+  e: 0.5
+5:
+  e: 0.5
+  f: 0.25
+...

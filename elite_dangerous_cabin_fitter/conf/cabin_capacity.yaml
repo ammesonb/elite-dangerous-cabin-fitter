@@ -1,0 +1,32 @@
+---
+# ************************* #
+# NO MODIFICATION NECESSARY #
+# ************************* #
+
+# Contains capacity of cabin, by class then quality
+6:
+  e: 32
+  b: 16
+  f: 12
+  l: 8
+5:
+  e: 16
+  b: 10
+  f: 6
+  l: 4
+4:
+  e: 8
+  b: 6
+  f: 3
+  l: 0
+3:
+  e: 4
+  b: 3
+  f: 0
+  l: 0
+2:
+  e: 2
+  b: 0
+  f: 0
+  l: 0
+...

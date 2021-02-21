@@ -1,0 +1,21 @@
+---
+# **************************** #
+# UPDATE ON EACH BOARD REFRESH #
+# **************************** #
+
+# A list of the missions available
+# Each mission must contain:
+#   - name: A way to identify this mission
+#   - faction: Which faction this mission is for (or just a number, whatever floats your boat)
+#   - reward: numerical value representing the reward
+#       (can be scaled to thousands, millions, or whatever metric you want)
+#   - min-quality: minimum cabin quality (requires only first letter)
+#       i.e. [e]conomy/[b]usiness/[f]irst/[l[uxury
+#   - passengers: numerical passenger count of mission
+-
+  name: Jane Doe
+  faction: 1 # (or Sirius Corp, SC, w/e)
+  reward: 1.8 # (probably million)
+  min-quality: b # for business - only provide first letter
+  passengers: 3
+...

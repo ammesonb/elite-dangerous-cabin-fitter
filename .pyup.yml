@@ -1,0 +1,8 @@
+update: insecure
+pin: True
+branch: main
+requirements:
+  - reqs.txt
+
+close_prs: False
+schedule: "every day"

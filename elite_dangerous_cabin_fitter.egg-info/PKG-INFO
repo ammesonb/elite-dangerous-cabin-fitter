@@ -1,0 +1,18 @@
+Metadata-Version: 1.2
+Name: elite-dangerous-cabin-fitter
+Version: 1.0.0
+Summary: Uses a naive algorithm to provide a best-fit for ED passenger missions
+Home-page: https://github.com/ammesonb/elite-dangerous-cabin-fitter
+Author: Brett Ammeson
+Author-email: ammesonb@gmail.com
+License: UNKNOWN
+Description: # Elite Dangerous Cabin Fitter
+        This is designed to optimize your cabin space given a list of missions.
+        
+        # Usage
+        Fill out the `cabins.yaml` and `missions.yaml` files for your use case.
+        
+        Then, run `optimize_passengers.py` and it will output the optimal missions to take.
+        
+Platform: UNKNOWN
+Requires-Python: >=3.7

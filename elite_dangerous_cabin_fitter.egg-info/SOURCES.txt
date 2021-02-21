@@ -1,0 +1,6 @@
+README.md
+setup.py
+elite_dangerous_cabin_fitter.egg-info/PKG-INFO
+elite_dangerous_cabin_fitter.egg-info/SOURCES.txt
+elite_dangerous_cabin_fitter.egg-info/dependency_links.txt
+elite_dangerous_cabin_fitter.egg-info/top_level.txt
