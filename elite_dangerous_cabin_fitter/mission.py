@@ -9,6 +9,7 @@ class Mission:
     A mission
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         name: str,
@@ -34,3 +35,18 @@ class Mission:
         String version of this
         """
         return f"{self.faction} - {self.name}"
+
+    def yaml(self) -> str:
+        """
+        This mission as YAML
+        """
+        return "\n".join(
+            [
+                "-",
+                f"  name: {self.name}",
+                f"  faction: {self.faction}",
+                f"  reward: {self.reward}",
+                f"  min-quality: {self.min_quality}",
+                f"  passengers: {self.passenger_count}\n\n",
+            ]
+        )

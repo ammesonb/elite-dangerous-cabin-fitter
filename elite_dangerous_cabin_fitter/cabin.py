@@ -5,6 +5,7 @@ from elite_dangerous_cabin_fitter.cabin_quality import CabinQuality
 from elite_dangerous_cabin_fitter import utils
 
 
+# pylint: disable=too-few-public-methods
 class Cabin:
     """
     A cabin on a ship

@@ -8,6 +8,7 @@ import yaml
 
 BASE_DIRECTORY = "elite_dangerous_cabin_fitter"
 
+
 def get_cabin_data() -> List[dict]:
     """
     Return the raw cabin data
@@ -60,3 +61,26 @@ def counter_wrapper(func):
     execute.counter = 0
 
     return execute
+
+
+def update_mission_file(mission_yaml: str):
+    """
+    .
+    """
+    mission_header = read_mission_file().split("\n-\n")[0]
+    write_mission_file(mission_header + "\n" + mission_yaml)
+
+
+def read_mission_file() -> str:
+    """
+    Gets mission file content
+    """
+    return open(f"{BASE_DIRECTORY}/missions.yaml", "r").read()
+
+
+def write_mission_file(data: str):
+    """
+    .
+    """
+    with open(f"{BASE_DIRECTORY}/missions.yaml", "w") as mission_file:
+        mission_file.write(data)

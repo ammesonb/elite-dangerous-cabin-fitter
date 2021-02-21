@@ -91,12 +91,7 @@ def test_duplicate_missions(capsys):
     mission_four = Mission("name2", "faction2", 1.5, "l", 4)
 
     assert not optimize_passengers.has_duplicate_missions(
-        [
-            mission_one,
-            mission_two,
-            mission_three,
-            mission_four,
-        ]
+        [mission_one, mission_two, mission_three, mission_four,]
     ), "No duplicates"
 
     printed = capsys.readouterr()
@@ -168,11 +163,7 @@ def test_print_result(capsys):
     cabin_three = Cabin(5, "e")
 
     optimize_passengers.print_results(
-        {
-            mission_one: cabin_one,
-            mission_two: cabin_two,
-            mission_three: cabin_three,
-        }
+        {mission_one: cabin_one, mission_two: cabin_two, mission_three: cabin_three,}
     )
     printed = capsys.readouterr()
     expected_table_lines = [
@@ -244,6 +235,7 @@ def test_optimize_success(capsys, monkeypatch):
         """
         return ["mission"]
 
+    # pylint: disable=unused-argument
     @utils.counter_wrapper
     def has_collision(missions):
         """
@@ -264,6 +256,19 @@ def test_optimize_success(capsys, monkeypatch):
         .
         """
 
+    @utils.counter_wrapper
+    def should_update():
+        """
+        .
+        """
+        return True
+
+    @utils.counter_wrapper
+    def update_missions(missions, assigned):
+        """
+        .
+        """
+
     monkeypatch.setattr(optimize_passengers, "load_cabins", load_cabins)
     monkeypatch.setattr(optimize_passengers, "load_missions", load_missions)
     monkeypatch.setattr(optimize_passengers, "has_duplicate_missions", has_collision)
@@ -271,6 +276,10 @@ def test_optimize_success(capsys, monkeypatch):
         optimize_passengers, "assign_missions_to_cabins", assign_missions
     )
     monkeypatch.setattr(optimize_passengers, "print_results", print_results)
+    monkeypatch.setattr(
+        optimize_passengers, "should_update_mission_list", should_update
+    )
+    monkeypatch.setattr(optimize_passengers, "update_mission_list", update_missions)
 
     optimize_passengers.optimize()
     assert load_cabins.counter == 1, "Cabins loaded"
@@ -278,6 +287,8 @@ def test_optimize_success(capsys, monkeypatch):
     assert has_collision.counter == 1, "Mission collisions checked"
     assert assign_missions.counter == 1, "Missions assigned"
     assert print_results.counter == 1, "Results printed"
+    assert should_update.counter == 1, "Checked if mission list should be updated"
+    assert update_missions.counter == 1, "Updated mission list"
 
     printed = capsys.readouterr()
     assert printed.out == "\n".join(
@@ -288,5 +299,73 @@ def test_optimize_success(capsys, monkeypatch):
             "Assigning missions...",
             "",
             "Optimal mission assignment:\n",
+            "Updating mission list...\n",
         ]
     )
+
+
+def test_should_update_missions(monkeypatch):
+    """
+    .
+    """
+    monkeypatch.setattr(
+        optimize_passengers, "get_sys_args", lambda: ["script", "update"]
+    )
+    assert (
+        optimize_passengers.should_update_mission_list()
+    ), "Argument passed in updates missions"
+    monkeypatch.setattr(optimize_passengers, "get_sys_args", lambda: ["script", "upd"])
+    assert (
+        not optimize_passengers.should_update_mission_list()
+    ), "Invalid argument does not update missions"
+
+    # Does actually have the input in builtins
+    # pylint: disable=no-member
+    monkeypatch.setattr(optimize_passengers, "get_sys_args", lambda: ["script"])
+    monkeypatch.setitem(optimize_passengers.__builtins__, "input", lambda prompt: "")
+    assert (
+        not optimize_passengers.should_update_mission_list()
+    ), "Doesn't update if prompt left blank"
+    monkeypatch.setitem(optimize_passengers.__builtins__, "input", lambda prompt: "n")
+    assert (
+        not optimize_passengers.should_update_mission_list()
+    ), "Doesn't update if prompt is no"
+    monkeypatch.setitem(optimize_passengers.__builtins__, "input", lambda prompt: "N")
+    assert (
+        not optimize_passengers.should_update_mission_list()
+    ), "Doesn't update if prompt is upper no"
+    monkeypatch.setitem(optimize_passengers.__builtins__, "input", lambda prompt: "yes")
+    assert (
+        not optimize_passengers.should_update_mission_list()
+    ), "Doesn't update if prompt is spelled yes"
+    monkeypatch.setitem(optimize_passengers.__builtins__, "input", lambda prompt: "y")
+    assert optimize_passengers.should_update_mission_list(), "Update if prompt is y"
+    monkeypatch.setitem(optimize_passengers.__builtins__, "input", lambda prompt: "Y")
+    assert optimize_passengers.should_update_mission_list(), "Update if prompt is Y"
+
+
+def test_update_mission_list(monkeypatch):
+    """
+    .
+    """
+
+    @utils.counter_wrapper
+    def update_missions(yaml):
+        """
+        .
+        """
+        assert (
+            yaml == mission_two.yaml() + mission_four.yaml()
+        ), "YAML for update is correct"
+
+    mission_one = Mission("name", "faction", 1.2, "e", 4)
+    mission_two = Mission("name2", "faction", 1.3, "b", 4)
+    mission_three = Mission("name", "faction2", 1.4, "e", 4)
+    mission_four = Mission("name2", "faction2", 1.5, "l", 4)
+
+    monkeypatch.setattr(utils, "update_mission_file", update_missions)
+    optimize_passengers.update_mission_list(
+        [mission_one, mission_two, mission_three, mission_four,],
+        [mission_one, mission_three,],
+    )
+    assert update_missions.counter == 1, "Missions would have been updated"

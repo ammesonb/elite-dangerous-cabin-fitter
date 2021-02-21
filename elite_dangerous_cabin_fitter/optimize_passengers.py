@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-from typing import List, Dict, Optional
+"""
+Runs the optimization of passenger missions for a given cabin configuration
+"""
+import sys
+from typing import List, Dict
 
 from texttable import Texttable
 
@@ -31,6 +35,46 @@ def optimize():
     print("")
     print("Optimal mission assignment:")
     print_results(assigned_missions)
+
+    if should_update_mission_list():
+        print("")
+        print("Updating mission list...")
+        update_mission_list(missions, assigned_missions)
+
+
+def should_update_mission_list() -> bool:
+    """
+    Check if argument passed in to update mission list
+    after calculating optimal missions
+    """
+    args = get_sys_args()
+    if len(args) == 1:
+        update = input("Remove these from missions? (y/N)").lower() == "y"
+    else:
+        update = args[1] == "update"
+
+    return update
+
+
+def get_sys_args() -> List[str]:
+    """
+    Wraps getting system arguments
+    """
+    return sys.argv
+
+
+def update_mission_list(missions: List[Mission], assigned_missions: List[Mission]):
+    """
+    Updates the mission list to remove the ones that were assigned
+    """
+    remaining_missions = list(
+        filter(lambda mission: mission not in assigned_missions, missions)
+    )
+    mission_yaml = ""
+    for mission in remaining_missions:
+        mission_yaml += mission.yaml()
+
+    utils.update_mission_file(mission_yaml)
 
 
 def load_cabins() -> List[Cabin]:
