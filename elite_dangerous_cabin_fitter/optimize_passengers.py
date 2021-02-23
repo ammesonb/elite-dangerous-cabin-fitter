@@ -155,8 +155,9 @@ def assign_missions_to_cabins(
                 best_mission = mission
                 best_score = mission_score
 
-        assigned_missions[best_mission] = cabin
-        missions.remove(best_mission)
+        if best_mission:
+            assigned_missions[best_mission] = cabin
+            missions.remove(best_mission)
 
     return assigned_missions
 
